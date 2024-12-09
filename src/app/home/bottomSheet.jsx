@@ -21,7 +21,7 @@ const TestBottomSheet = () => {
   };
 
   // 바텀시트 내부
-  const [selected, setSelected] = useState(0);
+  // const [selected, setSelected] = useState(0);
 
   const exhibitions = [
     {
@@ -74,6 +74,9 @@ const TestBottomSheet = () => {
     },
   ];
 
+  const [selectedStatus, setSelectedStatus] = useState('All'); 
+  const statusList = ['All', ...new Set(exhibitions.map(item => item.status))];
+
   return (
     <div>
       <BottomSheet
@@ -87,17 +90,15 @@ const TestBottomSheet = () => {
           // 탭 버튼
           <Container>
             <div className="h-10 flex items-center gap-2 cursor-grab select-none">
-              {exhibitions.map((item, index) => (
+              {statusList.map((status) => (
                 <button
-                  key={index}
-                  onClick={() => {
-                    setSelected(index);
-                  }}
+                  key={status}
+                  onClick={() => setSelectedStatus(status)}
                   className={classNames('text-gray-900 font-normal text-xs bg-gray-100 rounded-full px-3 py-1.5', {
-                    'text-white bg-gray-900': selected === index,
+                    'text-white bg-gray-900': selectedStatus === status,
                   })}
                 >
-                  {item.status}
+                  {status}
                 </button>
               ))}
             </div>
@@ -106,7 +107,13 @@ const TestBottomSheet = () => {
       >
         <Container>
           <div className="flex flex-col gap-4">
-            <ExhibitionList exhibitions={exhibitions} />
+            <ExhibitionList 
+            exhibitions={
+              selectedStatus === 'All' 
+                ? exhibitions 
+                : exhibitions.filter(item => item.status === selectedStatus)
+            } 
+          />
           </div>
         </Container>
       </BottomSheet>
